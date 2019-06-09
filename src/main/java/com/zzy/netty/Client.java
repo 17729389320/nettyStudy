@@ -3,6 +3,7 @@ package com.zzy.netty;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,6 +16,13 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.ReferenceCountUtil;
 
 public class Client {
+	private Channel channel = null;
+	
+	public void send(String msg) {
+		ByteBuf buf = Unpooled.copiedBuffer(msg.getBytes());
+		channel.writeAndFlush(buf);
+	}
+	
 
 	public void connect() {
 		//Ïß³Ì³Ø
@@ -34,6 +42,8 @@ public class Client {
 					if(!future.isSuccess()) {
 						System.out.println("not connected!");
 					} else {
+						// initialize the channel
+						channel = future.channel();
 						System.out.println("connected!");
 					}
 				}
