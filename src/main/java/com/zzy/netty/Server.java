@@ -41,7 +41,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 public class Server {
 	//处理通道组的所有的事件，便利
-	//public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+	public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 	static final int PORT = 8888;
 	public static void main(String[] args) throws Exception {
 		EventLoopGroup bossGroup = new NioEventLoopGroup(5);//管理请求的线程 ，用于处理服务器端接收客户端连接  
@@ -82,8 +82,8 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter { //SimpleChannleI
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		System.out.println("channelActive()");
-		//添加至通道组，
-		//Server.clients.add(ctx.channel());
+		//获取对应的通道，添加至通道组中
+		Server.clients.add(ctx.channel());
 	}
 	//客户端写数据时，调用该方法
 	@Override
@@ -96,8 +96,8 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter { //SimpleChannleI
 			byte[] bytes = new byte[buf.readableBytes()];
 			buf.getBytes(buf.readerIndex(), bytes);
 			System.out.println(new String(bytes));
-			
-			ctx.writeAndFlush(msg);
+			//便利通道组的每个通道的数据
+			Server.clients.writeAndFlush(msg);
 //			
 //			System.out.println(buf);
 //			System.out.println(buf.refCnt());
@@ -106,7 +106,7 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter { //SimpleChannleI
 			//System.out.println(buf.refCnt());
 		}
 	}
-
+	//出现异常调用此方法
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();
