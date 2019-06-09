@@ -110,6 +110,7 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter { //SimpleChannleI
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();
+		Server.clients.remove(ctx);
 		ctx.close();
 	}
 	
