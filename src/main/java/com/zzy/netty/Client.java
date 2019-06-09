@@ -16,7 +16,7 @@ import io.netty.util.ReferenceCountUtil;
 
 public class Client {
 
-	public static void main(String[] args) throws Exception {
+	public void connect() {
 		//Ïß³Ì³Ø
 		EventLoopGroup group = new NioEventLoopGroup(1);
 		Bootstrap b = new Bootstrap();
@@ -45,7 +45,9 @@ public class Client {
 			
 			
 			f.channel().closeFuture().sync();
-		} finally {
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
 			group.shutdownGracefully();
 		}
 	}
