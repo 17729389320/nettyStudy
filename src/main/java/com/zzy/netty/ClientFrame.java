@@ -8,9 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
+
 public class ClientFrame extends Frame {
 	TextArea ta = new TextArea();
 	TextField tf = new TextField();
+	Client c = null;
 	
 	public ClientFrame() {
 		this.setSize(600, 400);
@@ -21,6 +23,7 @@ public class ClientFrame extends Frame {
 			//按回车键出发该方法
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				c.send(tf.getText());
 				//把字符串发送到服务器
 				ta.setText(ta.getText() + tf.getText());
 				//清空消息区
@@ -29,7 +32,12 @@ public class ClientFrame extends Frame {
 		});
 		
 		this.setVisible(true);
-		new Client().connect();
+		connectToServer();
+	}
+	
+	private void connectToServer() {
+		c = new Client();
+		c.connect();
 	}
 	
 	public static void main(String[] args) {
