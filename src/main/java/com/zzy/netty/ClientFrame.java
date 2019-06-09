@@ -6,10 +6,13 @@ import java.awt.TextArea;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 
 public class ClientFrame extends Frame {
+	public static final ClientFrame INSTANCE = new ClientFrame();
 	TextArea ta = new TextArea();
 	TextField tf = new TextField();
 	Client c = null;
@@ -23,16 +26,22 @@ public class ClientFrame extends Frame {
 			//按回车键出发该方法
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				c.send(tf.getText());
+				String date = new Date().toLocaleString();
+				String line = System.getProperty("line.separator");
+				String context = tf.getText();
+				c.send("李四：    "+date+line+context);
 				//把字符串发送到服务器
-				ta.setText(ta.getText() + tf.getText());
+				//ta.setText(ta.getText() + tf.getText());
 				//清空消息区
 				tf.setText("");
 			}
+			
+			
+			
+			
 		});
 		
-		this.setVisible(true);
-		connectToServer();
+		
 	}
 	
 	private void connectToServer() {
@@ -40,7 +49,13 @@ public class ClientFrame extends Frame {
 		c.connect();
 	}
 	
+	public void updateText(String msgAccepted) {
+		this.ta.setText(ta.getText() + System.getProperty("line.separator") + msgAccepted);
+	}
+	
 	public static void main(String[] args) {
-		new ClientFrame();
+		ClientFrame cf = ClientFrame.INSTANCE; 
+		cf.setVisible(true);
+		cf.connectToServer();
 	}
 }

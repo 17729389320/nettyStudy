@@ -1,5 +1,6 @@
 package com.zzy.netty;
 
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -81,6 +82,8 @@ class ClientHandler extends ChannelInboundHandlerAdapter {
 			buf = (ByteBuf)msg;	
 			byte[] bytes = new byte[buf.readableBytes()];
 			buf.getBytes(buf.readerIndex(), bytes);
+			String msgAccepted = new String(bytes);
+			ClientFrame.INSTANCE.updateText(msgAccepted);
 			System.out.println(new String(bytes));
 			//System.out.println(buf);
 			//System.out.println(buf.refCnt());
