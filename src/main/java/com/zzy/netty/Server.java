@@ -1,21 +1,6 @@
 package com.zzy.netty;
 
 
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.util.concurrent.GlobalEventExecutor;
-
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
@@ -31,6 +16,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
+
 /*
  * Channel，表示一个连接，可以理解为每一个请求，就是一个Channel。
    ChannelHandler，核心处理业务就在这里，用于处理业务请求。
@@ -95,9 +81,17 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter { //SimpleChannleI
 			
 			byte[] bytes = new byte[buf.readableBytes()];
 			buf.getBytes(buf.readerIndex(), bytes);
-			System.out.println(new String(bytes));
-			//便利通道组的每个通道的数据
-			Server.clients.writeAndFlush(msg);
+			String s = new String(bytes);
+		
+			if(s.equals("_bye_")) {
+				System.out.println("客户端要求退出");
+				Server.clients.remove(ctx.channel());
+				ctx.close();
+			} else {
+				//便利通道组的每个通道的数据
+				Server.clients.writeAndFlush(msg);
+			}
+			
 //			
 //			System.out.println(buf);
 //			System.out.println(buf.refCnt());

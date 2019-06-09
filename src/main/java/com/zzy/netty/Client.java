@@ -23,7 +23,10 @@ public class Client {
 		ByteBuf buf = Unpooled.copiedBuffer(msg.getBytes());
 		channel.writeAndFlush(buf);
 	}
-	
+	public void closeConnect() {
+		this.send("_bye_");
+		//channel.close();
+	}
 
 	public void connect() {
 		//线程池
@@ -34,7 +37,7 @@ public class Client {
 					b.group(group)
 				.channel(NioSocketChannel.class)
 				.handler(new ClientChannelInitializer())
-				.connect("localhost", 8888)
+				.connect("192.168.1.102", 8888)
 				;
 						
 			f.addListener(new ChannelFutureListener() {
@@ -97,7 +100,7 @@ class ClientHandler extends ChannelInboundHandlerAdapter {
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		//channle 第一次连上可用，写出一个字符串 Direct Memory 
 		//普通的ByteBuffer中，网络数据首先写给操作系统，java虚拟机使用时候，需要先copy到虚拟机内存中，而 ByteBuf从虚拟机直接访问操作操作系统内存 ，效率高；
-		ByteBuf buf = Unpooled.copiedBuffer("hello".getBytes());
+		ByteBuf buf = Unpooled.copiedBuffer("张松岩加入群聊".getBytes());
 		ctx.writeAndFlush(buf);//自动释放
 	}
 	

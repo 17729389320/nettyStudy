@@ -6,6 +6,8 @@ import java.awt.TextArea;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,18 +31,22 @@ public class ClientFrame extends Frame {
 				String date = new Date().toLocaleString();
 				String line = System.getProperty("line.separator");
 				String context = tf.getText();
-				c.send("李四：    "+date+line+context);
+				c.send("张松岩：    "+date+line+context);
 				//把字符串发送到服务器
 				//ta.setText(ta.getText() + tf.getText());
 				//清空消息区
 				tf.setText("");
 			}
-			
-			
-			
+		});
+		this.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				c.closeConnect();
+				System.exit(0);
+			}
 			
 		});
-		
 		
 	}
 	
